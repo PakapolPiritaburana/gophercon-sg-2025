@@ -6,23 +6,31 @@ import (
 	"reflect"
 )
 
-type person struct {
-	name string
-	age  any
+type Person struct {
+	Name string `json:"name"`
+	Age  any    `json:"age"`
 }
 
 func main() {
-	a := &person{"John", 30.00}
+	a := Person{"John", 30}
 
-	aBs, _ := json.Marshal(a)
-	var aUnmarchalled person
-	_ = json.Unmarshal(aBs, &a)
+	aBs, err := json.Marshal(a)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+		return
+	}
+
+	var aUnmarchalled Person
+	_ = json.Unmarshal(aBs, &aUnmarchalled)
+
+	fmt.Printf("type of age %v\n", reflect.TypeOf(aUnmarchalled.Age))
+
 	aEqual := reflect.DeepEqual(a, aUnmarchalled)
 
 	if !aEqual {
 		fmt.Printf("Not equal")
 	} else {
-		fmt.Printf("Equal\nmyDoc is %v\nmyDocUnmarchalled is %v",
+		fmt.Printf("Equal\na is %v\naUnmarchalled is %v",
 			a, aUnmarchalled)
 	}
 }
